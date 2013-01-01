@@ -1,0 +1,25 @@
+<%= form_for(@matched_name) do |f| %>
+  <% if @matched_name.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@matched_name.errors.count, "error") %> prohibited this matched_name from being saved:</h2>
+
+      <ul>
+      <% @matched_name.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+   <div class="field">
+    <%= f.label :preferred_name %><br />
+    <%= f.collection_select :preferred_name_id, PreferredName.all, :id, :name %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

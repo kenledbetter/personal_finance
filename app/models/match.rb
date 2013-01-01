@@ -1,0 +1,5 @@
+class Match < ActiveRecord::Base
+  attr_accessible :name
+
+  has_many :raw_names
+end

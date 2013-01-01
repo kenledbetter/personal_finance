@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Date:</b>
+  <%= @entry.date %>
+</p>
+<p>
+  <b>Original name:</b>
+  <%= @entry.original_name %>
+</p>
+<p>
+<p>
+  <b>Matched name:</b>
+  <% if (@entry.matched_name_id == nil) %>
+    <% matched_names = MatchedName.find_by_name(@entry.original_name) %>
+    <% if (matched_names) %>
+      <%= matched_names.preferred_name.name %>
+    <% else %>
+      No matched name found
+    <% end %>
+  <% else %>
+    b <%= @entry.matched_name.preferred_name.name %>
+  <% end %>
+</p>
+
+
+<%= link_to 'Edit', edit_entry_path(@entry) %> |
+<%= link_to 'Back', entries_path %>

@@ -1,0 +1,13 @@
+<h1>Import entries</h1>
+
+<% if flash[:notice] %>
+  <p class="notice"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:error] %>
+  <p class="error"><%= flash[:error] %></p>
+<% end %>
+
+<%= form_tag({:action => :import}, :multipart => true) do %>
+  <%= file_field_tag 'attachment' %>
+  <%= submit_tag "Upload file" %>
+<% end %>
