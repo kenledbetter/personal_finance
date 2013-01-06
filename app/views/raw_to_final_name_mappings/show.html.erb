@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @raw_to_final_name_mapping.name %>
+</p>
+
+<p>
+  <b>Account:</b>
+  <%= @raw_to_final_name_mapping.account %>
+</p>
+
+<p>
+  <b>Final name:</b>
+  <%= @raw_to_final_name_mapping.final_name %>
+</p>
+
+
+<%= link_to 'Edit', edit_raw_to_final_name_mapping_path(@raw_to_final_name_mapping) %> |
+<%= link_to 'Back', raw_to_final_name_mappings_path %>

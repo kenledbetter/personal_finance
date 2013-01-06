@@ -1,4 +1,10 @@
 PersonalFinance::Application.routes.draw do
+  resources :final_names
+
+
+  resources :raw_to_final_name_mappings
+
+
   resources :matched_names
 
 
@@ -14,7 +20,12 @@ PersonalFinance::Application.routes.draw do
   resources :matches
 
 
-  resources :categories
+  resources :categories do
+    collection do
+      get 'monthly'
+      post 'monthly'
+    end
+  end
 
 
   resources :accounts
@@ -23,6 +34,13 @@ PersonalFinance::Application.routes.draw do
     collection do 
       get 'import'
       post 'import'
+      get 'match'
+      post 'search'
+      get 'search'
+    end
+
+    member do
+      get 'match'
     end
   end
 

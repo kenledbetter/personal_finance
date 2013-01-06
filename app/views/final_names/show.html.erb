@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @final_name.name %>
+</p>
+
+<p>
+  <b>Category:</b>
+  <%= @final_name.category.try(:name) %>
+</p>
+
+<p>
+  <b>Entries:</b>
+</p>
+
+<%= render :partial => 'entries/list' %>
+
+<%= link_to 'Edit', edit_final_name_path(@final_name) %> |
+<%= link_to 'Back', final_names_path %>

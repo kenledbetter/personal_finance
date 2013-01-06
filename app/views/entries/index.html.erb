@@ -1,29 +1,13 @@
 <h1>Listing entries</h1>
 
-<table>
-  <tr>
-    <th>Date</th>
-    <th>Original name</th>
-    <th>Amount</th>
-    <th>Category</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @entries.each do |entry| %>
-  <tr>
-    <td><%= entry.date.strftime('%m/%d/%Y') %></td>
-    <td><%= entry.original_name %></td>
-    <td><%= entry.amount %></td>
-    <td><%= entry.category.nil? ? "" : entry.category.name %></td>
-    <td><%= link_to 'Show', entry %></td>
-    <td><%= link_to 'Edit', edit_entry_path(entry) %></td>
-    <td><%= link_to 'Destroy', entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
+<%= form_tag('/entries/search') do %>
+  Show entries for:
+  <%= select_month(@date) %>
+  <%= select_year(@date) %>
+  <%= submit_tag("Submit")%>
 <% end %>
-</table>
 
-<br />
+<%= render :partial => 'list' %>
 
 <%= link_to 'New Entry', new_entry_path %>
+<%= link_to 'Match', match_entries_path %>

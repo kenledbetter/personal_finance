@@ -1,0 +1,27 @@
+<h1>Listing raw_to_final_name_mappings</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Account</th>
+    <th>Final name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @raw_to_final_name_mappings.each do |raw_to_final_name_mapping| %>
+  <tr>
+    <td><%= raw_to_final_name_mapping.name %></td>
+    <td><%= raw_to_final_name_mapping.account %></td>
+    <td><%= raw_to_final_name_mapping.final_name %></td>
+    <td><%= link_to 'Show', raw_to_final_name_mapping %></td>
+    <td><%= link_to 'Edit', edit_raw_to_final_name_mapping_path(raw_to_final_name_mapping) %></td>
+    <td><%= link_to 'Destroy', raw_to_final_name_mapping, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Raw to final name mapping', new_raw_to_final_name_mapping_path %>

@@ -14,6 +14,11 @@ class CategoriesController < ApplicationController
   # GET /categories/1.json
   def show
     @category = Category.find(params[:id])
+    @entries = []
+    @category.final_names.each do |final_name|
+      @entries.push(final_name.entries)
+    end
+    @entries.flatten!
 
     respond_to do |format|
       format.html # show.html.erb
@@ -78,6 +83,44 @@ class CategoriesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to categories_url }
       format.json { head :no_content }
+    end
+  end
+
+  # GET /categories/monthly
+  # POST /categories/monthly
+  def monthly
+    if (params[:date] != nil && params[:date][:year] != nil)
+      year = params[:date][:year].to_i
+    else
+      year = Date.today.year
+    end
+
+    month = 1
+    @months = []
+    @date = Date.civil(year, 1, 1)
+
+    (0...12).each do |i|
+      startDay = Date.civil(year, month, 1)
+      endDay = Date.civil(year, month, -1)
+
+      totals = {}
+
+      Entry.where(:date => startDay..endDay).each do |entry|
+        if (!entry.final_name.category.ignore)
+          if (totals[entry.final_name.category.name] == nil)
+            totals[entry.final_name.category.name] = {:debits => 0, :credits => 0}
+          end
+    
+          if (entry.amount > 0)
+            totals[entry.final_name.category.name][:debits] += entry.amount
+          else
+            totals[entry.final_name.category.name][:credits] += entry.amount
+          end
+        end
+      end
+
+      @months.push(totals)
+      month += 1
     end
   end
 end

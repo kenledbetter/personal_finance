@@ -1,0 +1,36 @@
+<h1>Monthly totals by category</h1>
+
+<%= form_tag('/categories/monthly') do %>
+  Show totals for:
+  <%= select_year(@date) %>
+  <%= submit_tag("Submit")%>
+<% end %>
+
+<% @months.each do |month| %>
+<table>
+  <tr>
+    <th>Category</th>
+    <th>Credits</th>
+    <th>Debits</th>
+  </tr>
+
+<% credits = 0 %>
+<% debits = 0 %>
+<% month.each do |key, value| %>
+  <% credits += value[:credits] %>
+  <% debits += value[:debits] %>
+  <tr>
+    <td><%= key %></td>
+    <td><%= value[:credits] %></td>
+    <td><%= value[:debits]  %></td>
+  </tr>
+<% end %>
+  <tr>
+    <td><b>Totals</b></td>
+    <td><%= credits %></td>
+    <td><%= debits  %></td>
+  </tr>
+</table>
+
+<br />
+<% end %>

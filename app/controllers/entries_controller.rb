@@ -4,12 +4,39 @@ class EntriesController < ApplicationController
   # GET /entries
   # GET /entries.json
   def index
-    @entries = Entry.find(:all, :order => :date)
+    #@entries = Entry.find(:all, :order => :date)
+    year = Date.today.year
+    month = Date.today.month
+
+    startDay = Date.civil(year, month, 1)
+    endDay = Date.civil(year, month, -1)
+
+    @entries = Entry.where(:date => startDay..endDay)
+    @date = startDay
 
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @entries }
     end
+  end
+
+  # POST /entries/search
+  def search
+    if (params[:date] != nil && params[:date][:month] != nil && params[:date][:year] != nil)
+      year = params[:date][:year].to_i
+      month = params[:date][:month].to_i
+    else
+      year = Date.today.year
+      month = Date.today.month
+    end
+
+    startDay = Date.civil(year, month, 1)
+    endDay = Date.civil(year, month, -1)
+
+    @entries = Entry.where(:date => startDay..endDay)
+    @date = startDay
+
+    render "index"
   end
 
   # GET /entries/1
@@ -37,6 +64,20 @@ class EntriesController < ApplicationController
   # GET /entries/1/edit
   def edit
     @entry = Entry.find(params[:id])
+    @finalName = ""
+    @finalNameAuto = false
+
+    if (@entry.final_name != nil)
+      @finalName = @entry.final_name.name
+    end
+
+    rtfnMapping = RawToFinalNameMapping.find_by_name_and_account_id(
+      @entry.raw_name, @entry.account_id)
+    
+    if (rtfnMapping != nil && @entry.final_name != nil &&
+        rtfnMapping.final_name == @entry.final_name)
+      @finalNameAuto = true
+    end
   end
 
   # POST /entries
@@ -59,6 +100,21 @@ class EntriesController < ApplicationController
   # PUT /entries/1.json
   def update
     @entry = Entry.find(params[:id])
+
+    if (params[:final_name] != nil && params[:final_name] != "")
+      final_name  = FinalName.find_or_create_by_name(params[:final_name])
+
+      @entry.final_name = final_name
+      @entry.save
+
+      if (params[:final_name_auto] != nil)
+        rtfnMapping = RawToFinalNameMapping.find_or_create_by_name_and_account_id(
+          params[:entry][:raw_name],  params[:entry][:account_id])
+        rtfnMapping.final_name = final_name
+        rtfnMapping.save
+
+      end
+    end
 
     respond_to do |format|
       if @entry.update_attributes(params[:entry])
@@ -83,6 +139,8 @@ class EntriesController < ApplicationController
     end
   end
 
+  # GET /entries/import
+  # POST /entries/import
   def import
     @imported = false
 
@@ -92,10 +150,36 @@ class EntriesController < ApplicationController
       CSV.parse(params[:attachment].read).each do |row|
         entry = Entry.new(
           :date => Date.strptime(row[0], '%m/%d/%Y'),
-          :original_name => row[2],
-          :amount =>row[7])
+          :raw_name => row[2],
+          :amount => row[7],
+          :account_id => params[:account_id])
         entry.save
       end
+    end
+  end
+
+  # GET /entries/1/match
+  # GET /entries/match
+  def match
+    if (params[:id] == nil)
+      @entries = Entry.where(:final_name_id => nil)
+    else
+      @entries = [Entry.find(params[:id])]
+    end
+
+    @entries.each do |entry|
+    # Search for mapping that matches raw name
+      rtfnMapping = RawToFinalNameMapping.find_by_name_and_account_id(
+        entry.raw_name,  entry.account_id)
+  
+      if (rtfnMapping != nil)
+        entry.final_name = rtfnMapping.final_name
+        entry.save
+      end
+    end
+
+    respond_to do |format|
+      format.html { redirect_to :action => 'index' }
     end
   end
 end

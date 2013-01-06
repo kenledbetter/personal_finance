@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121218192506) do
+ActiveRecord::Schema.define(:version => 20130106171447) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -21,37 +21,40 @@ ActiveRecord::Schema.define(:version => 20121218192506) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "ignore",     :default => false
   end
 
   create_table "entries", :force => true do |t|
-    t.string   "original_name"
+    t.string   "raw_name"
     t.decimal  "amount"
     t.datetime "date"
     t.integer  "account_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-    t.integer  "category_id"
-    t.integer  "matched_name_id"
-    t.integer  "preferred_name_id"
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
+    t.integer  "final_name_id"
+    t.decimal  "amount_new",    :precision => 15, :scale => 2
   end
 
   add_index "entries", ["account_id"], :name => "index_entries_on_account_id"
 
-  create_table "matched_names", :force => true do |t|
+  create_table "final_names", :force => true do |t|
     t.string   "name"
-    t.integer  "preferred_name_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "category_id"
   end
 
-  add_index "matched_names", ["preferred_name_id"], :name => "index_matched_names_on_preferred_name_id"
-
-  create_table "preferred_names", :force => true do |t|
+  create_table "raw_to_final_name_mappings", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "account_id"
+    t.integer  "final_name_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
+
+  add_index "raw_to_final_name_mappings", ["account_id"], :name => "index_raw_to_final_name_mappings_on_account_id"
+  add_index "raw_to_final_name_mappings", ["final_name_id"], :name => "index_raw_to_final_name_mappings_on_final_name_id"
 
 end

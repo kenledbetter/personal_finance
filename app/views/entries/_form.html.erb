@@ -15,19 +15,28 @@
     <%= f.date_select :date %>
   </div>
   <div class="field">
-    <%= f.label :original_name %><br />
-    <%= f.text_field :original_name %>
+    <%= f.label :raw_name %><br />
+    <% if (@entry.raw_name == nil) %>
+      <%= f.text_field :raw_name %>
+    <% else %>
+      <%= @entry.raw_name %>
+    <% end %>
   </div>
   <div class="field">
-    <%= f.number_field :amount %>
+    <%= label_tag :final_name %><br />
+    <%= text_field_tag :final_name, @finalName %>
+  </div>
+  <div class="field">
+    <%= label_tag :final_name_auto %><br />
+    <%= check_box_tag :final_name_auto, "1", @finalNameAuto %>
+  </div>
+  <div class="field">
+    <%= f.label :amount %><br />
+    <%= f.text_field :amount %>
   </div>
   <div class="field">
     <%= f.label :account %><br />
     <%= f.collection_select :account_id, Account.all, :id, :name %>
-  </div>
-  <div class="field">
-    <%= f.label :category %><br />
-    <%= f.collection_select :category_id, Category.all, :id, :name %>
   </div>
   <div class="actions">
     <%= f.submit %>

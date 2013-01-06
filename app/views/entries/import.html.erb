@@ -8,6 +8,12 @@
 <% end %>
 
 <%= form_tag({:action => :import}, :multipart => true) do %>
-  <%= file_field_tag 'attachment' %>
-  <%= submit_tag "Upload file" %>
+  <div class="field">
+    <%= label_tag :account %><br />
+    <%= select_tag :account_id, options_from_collection_for_select(Account.all, :id, :name) %>
+  </div>
+  <div class="field">
+    <%= file_field_tag :attachment %>
+    <%= submit_tag "Upload file" %>
+  </div>
 <% end %>
