@@ -24,6 +24,8 @@ PersonalFinance::Application.routes.draw do
     collection do
       get 'monthly'
       post 'monthly'
+      get 'yearly'
+      post 'yearly'
     end
   end
 

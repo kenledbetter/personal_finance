@@ -123,4 +123,36 @@ class CategoriesController < ApplicationController
       month += 1
     end
   end
+
+  # GET /categories/yearly
+  # POST /categories/yearly
+  def yearly
+    if (params[:date] != nil && params[:date][:year] != nil)
+      year = params[:date][:year].to_i
+    else
+      year = Date.today.year
+    end
+
+    @date = Date.civil(year, 1, 1)
+
+    startDay = Date.civil(year, 1, 1)
+    endDay = Date.civil(year, 12, -1)
+
+    @totals = {}
+
+    Entry.where(:date => startDay..endDay).each do |entry|
+      if (!entry.final_name.category.ignore)
+        if (@totals[entry.final_name.category.name] == nil)
+          @totals[entry.final_name.category.name] =
+            {:category => entry.final_name.category, :debits => 0, :credits => 0}
+        end
+  
+        if (entry.amount > 0)
+          @totals[entry.final_name.category.name][:credits] += entry.amount
+        else
+          @totals[entry.final_name.category.name][:debits] += entry.amount
+        end
+      end
+    end
+  end
 end

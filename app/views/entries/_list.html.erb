@@ -9,21 +9,21 @@
     <th></th>
   </tr>
 
-<% debits = 0 %>
-<% credits = 0 %>
+<% debits = BigDecimal.new(0) %>
+<% credits = BigDecimal.new(0) %>
 
 <% @entries.each do |entry| %>
   <% if (!entry.final_name.category.ignore) %>
     <% if (entry.amount > 0) %>
-      <% credits += entry.amount %>
+      <% credits += entry.amount.round(2) %>
     <% else %>
-      <% debits += entry.amount %>
+      <% debits += entry.amount.round(2) %>
     <% end %>
   <% end %>
   <tr>
     <td><%= entry.date.strftime('%m/%d/%Y') %></td>
     <td><%= link_to entry.final_name.name, entry.final_name %></td>
-    <td><%= entry.amount %></td>
+    <td><%= entry.amount.round(2) %></td>
     <td><%= link_to entry.final_name.category.name, entry.final_name.category %>
     <td><%= link_to 'Show', entry %></td>
     <td><%= link_to 'Edit', edit_entry_path(entry) %></td>

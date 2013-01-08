@@ -1,12 +1,11 @@
 <h1>Monthly totals by category</h1>
 
-<%= form_tag('/categories/monthly') do %>
+<%= form_tag('/categories/yearly') do %>
   Show totals for:
   <%= select_year(@date) %>
   <%= submit_tag("Submit")%>
 <% end %>
 
-<% @months.each do |month| %>
 <table>
   <tr>
     <th>Category</th>
@@ -16,13 +15,13 @@
 
 <% credits = BigDecimal.new(0) %>
 <% debits = BigDecimal.new(0) %>
-<% month.each do |key, value| %>
+<% @totals.each do |key, value| %>
   <% credits += value[:credits].round(2) %>
-  <% debits += value[:debits].round(2) %>
+  <% debits += value[:debits] != 0 ? -value[:debits].round(2) : 0.0 %>
   <tr>
-    <td><%= key %></td>
+    <td><%= link_to key, value[:category] %></td>
     <td><%= value[:credits].round(2) %></td>
-    <td><%= value[:debits].round(2)  %></td>
+    <td><%= value[:debits] != 0 ? -value[:debits].round(2) : 0.0  %></td>
   </tr>
 <% end %>
   <tr>
@@ -33,4 +32,3 @@
 </table>
 
 <br />
-<% end %>
