@@ -1,9 +1,11 @@
 class Entry < ActiveRecord::Base
   belongs_to :account
   belongs_to :final_name
+  belongs_to :category
+  belongs_to :import_batch
 
   attr_accessor :final_name_form
-  attr_accessible :raw_name, :amount, :date, :account_id
+  attr_accessible :raw_name, :amount, :date, :account_id, :category_id, :import_batch_id, :comment
 
   before_save :before_save_callback
 
@@ -20,7 +22,13 @@ class Entry < ActiveRecord::Base
         rtfnMapping.save
       end
 
+      # Assign final name to entry
       self.final_name = rtfnMapping.final_name
+
+      # If entry category is nil, assign category from final_name
+      if (self.category == nil)
+        self.category = rtfnMapping.final_name.category
+      end
     end
   end
 end

@@ -1,0 +1,21 @@
+<h1>Listing import_batches</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @import_batches.each do |import_batch| %>
+  <tr>
+    <td><%= link_to 'Show', import_batch %></td>
+    <td><%= link_to 'Edit', edit_import_batch_path(import_batch) %></td>
+    <td><%= link_to 'Destroy', import_batch, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Import batch', new_import_batch_path %>

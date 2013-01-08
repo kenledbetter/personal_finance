@@ -101,21 +101,6 @@ class EntriesController < ApplicationController
   def update
     @entry = Entry.find(params[:id])
 
-    if (params[:final_name] != nil && params[:final_name] != "")
-      final_name  = FinalName.find_or_create_by_name(params[:final_name])
-
-      @entry.final_name = final_name
-      @entry.save
-
-      if (params[:final_name_auto] != nil)
-        rtfnMapping = RawToFinalNameMapping.find_or_create_by_name_and_account_id(
-          params[:entry][:raw_name],  params[:entry][:account_id])
-        rtfnMapping.final_name = final_name
-        rtfnMapping.save
-
-      end
-    end
-
     respond_to do |format|
       if @entry.update_attributes(params[:entry])
         format.html { redirect_to @entry, notice: 'Entry was successfully updated.' }
@@ -147,12 +132,15 @@ class EntriesController < ApplicationController
     if (!params[:attachment].blank?)
       flash.now[:notice] = "File uploaded"
 
+      import_batch = ImportBatch.create
+
       CSV.parse(params[:attachment].read).each do |row|
         entry = Entry.new(
           :date => Date.strptime(row[0], '%m/%d/%Y'),
           :raw_name => row[2],
           :amount => row[7],
-          :account_id => params[:account_id])
+          :account_id => params[:account_id],
+          :import_batch_id => import_batch.id)
         entry.save
       end
     end

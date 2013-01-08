@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130106171447) do
+ActiveRecord::Schema.define(:version => 20130108190008) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -28,13 +28,15 @@ ActiveRecord::Schema.define(:version => 20130106171447) do
 
   create_table "entries", :force => true do |t|
     t.string   "raw_name"
-    t.decimal  "amount"
+    t.decimal  "amount",          :precision => 15, :scale => 2
     t.datetime "date"
     t.integer  "account_id"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
     t.integer  "final_name_id"
-    t.decimal  "amount_new",    :precision => 15, :scale => 2
+    t.integer  "category_id"
+    t.text     "comment"
+    t.integer  "import_batch_id"
   end
 
   add_index "entries", ["account_id"], :name => "index_entries_on_account_id"
@@ -44,6 +46,11 @@ ActiveRecord::Schema.define(:version => 20130106171447) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "category_id"
+  end
+
+  create_table "import_batches", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "raw_to_final_name_mappings", :force => true do |t|

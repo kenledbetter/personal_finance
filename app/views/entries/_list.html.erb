@@ -13,7 +13,7 @@
 <% credits = BigDecimal.new(0) %>
 
 <% @entries.each do |entry| %>
-  <% if (!entry.final_name.category.ignore) %>
+  <% if (!entry.category.ignore) %>
     <% if (entry.amount > 0) %>
       <% credits += entry.amount.round(2) %>
     <% else %>
@@ -24,7 +24,7 @@
     <td><%= entry.date.strftime('%m/%d/%Y') %></td>
     <td><%= link_to entry.final_name.name, entry.final_name %></td>
     <td><%= entry.amount.round(2) %></td>
-    <td><%= link_to entry.final_name.category.name, entry.final_name.category %>
+    <td><%= link_to entry.category.name, entry.category %>
     <td><%= link_to 'Show', entry %></td>
     <td><%= link_to 'Edit', edit_entry_path(entry) %></td>
     <td><%= link_to 'Destroy', entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>

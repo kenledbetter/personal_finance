@@ -1,4 +1,7 @@
 PersonalFinance::Application.routes.draw do
+  resources :import_batches
+
+
   resources :final_names
 
 
