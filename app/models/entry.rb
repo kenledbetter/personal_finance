@@ -1,4 +1,6 @@
 class Entry < ActiveRecord::Base
+  default_scope order('date')
+
   belongs_to :account
   belongs_to :final_name
   belongs_to :category

@@ -14,11 +14,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1.json
   def show
     @category = Category.find(params[:id])
-    @entries = []
-    @category.final_names.each do |final_name|
-      @entries.push(final_name.entries)
-    end
-    @entries.flatten!
+    @entries = @category.entries
 
     respond_to do |format|
       format.html # show.html.erb

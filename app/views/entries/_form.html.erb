@@ -36,11 +36,15 @@
   </div>
   <div class="field">
     <%= f.label :account %><br />
-    <%= f.collection_select :account_id, Account.all, :id, :name %>
+    <% if (@entry.account == nil) %>
+      <%= f.collection_select :account_id, Account.order("lower(name) ASC").all, :id, :name %>
+    <% else %>
+      <%= @entry.account.name %>
+    <% end %>
   </div>
   <div class="field">
     <%= f.label :category %><br />
-    <%= f.collection_select :category_id, Category.all, :id, :name %>
+    <%= f.collection_select :category_id, Category.order("lower(name) ASC").all, :id, :name %>
   </div>
   <div class="field">
     <%= f.label :comment %><br />

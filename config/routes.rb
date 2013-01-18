@@ -1,27 +1,23 @@
 PersonalFinance::Application.routes.draw do
   resources :import_batches
 
-
-  resources :final_names
-
+  resources :final_names do
+    member do
+      put 'merge'
+    end
+  end
 
   resources :raw_to_final_name_mappings
 
-
   resources :matched_names
-
 
   resources :preferred_names
 
-
   resources :raw_names
-
 
   resources :names
 
-
   resources :matches
-
 
   resources :categories do
     collection do
@@ -31,7 +27,6 @@ PersonalFinance::Application.routes.draw do
       post 'yearly'
     end
   end
-
 
   resources :accounts
 

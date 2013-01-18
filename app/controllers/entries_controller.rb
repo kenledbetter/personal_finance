@@ -4,7 +4,6 @@ class EntriesController < ApplicationController
   # GET /entries
   # GET /entries.json
   def index
-    #@entries = Entry.find(:all, :order => :date)
     year = Date.today.year
     month = Date.today.month
 
@@ -101,6 +100,23 @@ class EntriesController < ApplicationController
   def update
     @entry = Entry.find(params[:id])
 
+    # If final_name has changed, find or create it and assign it
+    if (params[:final_name] && params[:final_name] != @entry.final_name.try(:name) &&
+        final_name = FinalName.find_or_create_by_name(params[:final_name]))
+      old_final_name = @entry.final_name
+      @entry.final_name = final_name
+      @entry.save
+
+      # Delete orphaned final_names and mappings
+      if (old_final_name != nil && old_final_name.entries.length == 0)
+        old_final_name.raw_to_final_name_mappings.each do |rtfnMapping|
+          rtfnMapping.destroy
+        end
+
+        old_final_name.destroy
+      end
+    end
+
     respond_to do |format|
       if @entry.update_attributes(params[:entry])
         format.html { redirect_to @entry, notice: 'Entry was successfully updated.' }
@@ -162,6 +178,7 @@ class EntriesController < ApplicationController
   
       if (rtfnMapping != nil)
         entry.final_name = rtfnMapping.final_name
+        entry.category = rtfnMapping.final_name.category
         entry.save
       end
     end

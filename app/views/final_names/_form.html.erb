@@ -17,9 +17,28 @@
   </div>
   <div class="field">
     <%= f.label :category %><br />
-    <%= f.collection_select :category_id, Category.all, :id, :name %>
+    <%= f.collection_select :category_id, Category.order('lower(name)').all, :id, :name %>
+  </div>
+  <div class="field">
+    <%= f.label "Merge entry categories with default?" %>
+    <%= check_box_tag :merge_category, "1", false %>
   </div>
   <div class="actions">
     <%= f.submit %>
+  </div>
+<% end %>
+
+<%= form_for(@final_name, :url => {:action => "merge"}) do |f| %>
+  <div class="field">
+    <%= f.label "Merge with" %>
+    <%= select_tag :merge_id,
+      options_from_collection_for_select(FinalName.order("lower(name) ASC").all, :id, :name) %>
+  </div>
+  <div class="field">
+    <%= f.label "Merge category?" %>
+    <%= check_box_tag :merge_category, "1", true %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Merge Final Name" %>
   </div>
 <% end %>

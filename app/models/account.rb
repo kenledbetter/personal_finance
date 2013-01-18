@@ -1,5 +1,5 @@
 class Account < ActiveRecord::Base
-  attr_accessible :name
+  has_many :entries, :order => 'date'
 
-  has_many :entries
+  attr_accessible :name
 end
